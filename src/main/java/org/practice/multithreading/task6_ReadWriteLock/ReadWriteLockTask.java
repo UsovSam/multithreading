@@ -12,6 +12,7 @@ public class ReadWriteLockTask {
         ReadWriteLock lock = new ReentrantReadWriteLock();
         ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 
+
         public String get(String key) {
             lock.readLock().lock();
             try {
