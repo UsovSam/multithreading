@@ -12,19 +12,7 @@ public class Counter_ReentrantLock extends Counter {
     }
 
     @Override
-    public synchronized void increment() {
-// I can do it this way ?
-//
-//        if(reentrantLock.tryLock()){
-//            try {
-//                counter++;
-//            } finally {
-//                reentrantLock.unlock();
-//            }
-//        } else {
-//            System.out.println("Lock is locked");
-//        }
-
+    public void increment() {
         reentrantLock.lock();
         try {
             counter++;

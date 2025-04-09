@@ -11,9 +11,8 @@ public class Counter_Atomic extends Counter {
     }
 
     @Override
-    public synchronized void increment() {
+    public void increment() {
         counter.incrementAndGet();
-//        counter.addAndGet(1);
     }
 
     @Override

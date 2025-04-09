@@ -16,7 +16,7 @@ public class CompletableTask {
                 .map(CompletableTask::handleElement)
                 .toList();
 
-        CompletableFuture.allOf(collect.toArray(new CompletableFuture[0]));
+//        CompletableFuture.allOf(collect.toArray(new CompletableFuture[0]));
 
         System.out.println("==============");
 
@@ -44,14 +44,14 @@ public class CompletableTask {
                     try {
                         TimeUnit.SECONDS.sleep(o);
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        Thread.currentThread().interrupt();
                     }
                     return o;
                 })
                 .thenAccept(o -> System.out.println(element + " " + o))
                 .exceptionally(throwable -> {
                     log.error(String.valueOf(throwable));
-                    System.out.println(element);
+                    System.out.println("Exception for " + element);
                     return null;
                 });
     }
@@ -64,7 +64,7 @@ public class CompletableTask {
                     try {
                         TimeUnit.SECONDS.sleep(o);
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        Thread.currentThread().interrupt();
                     }
                     return o;
                 })
