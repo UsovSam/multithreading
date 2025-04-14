@@ -12,7 +12,7 @@ public class SumTaskTest {
     public void test() {
         int[] arrays = prepareArray(1000);
         int sum = Arrays.stream(arrays).sum();
-        SumTask.SumTaksImpl task = new SumTask.SumTaksImpl(arrays);
+        SumTask.SumTakskImpl task = new SumTask.SumTakskImpl(arrays, 0, arrays.length);
         Integer result = task.invoke();
 
         Assertions.assertEquals(sum, result.intValue());

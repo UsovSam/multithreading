@@ -1,27 +1,43 @@
 package org.practice.multithreading.task8_threadlocal;
 
 public class UserService implements Runnable {
-    private ThreadLocal<String> localThreadValue = new ThreadLocal<>();
-    private String userId;
+    private static final ThreadLocal<String> localThreadValue = new ThreadLocal<>();
 
-    public UserService(String userId) {
-        this.userId = userId;
+    public UserService() {
     }
 
     @Override
     public void run() {
-        localThreadValue.set(userId);
-        System.out.println("Thread Id: " + Thread.currentThread().getName() + " - " + localThreadValue.get());
-        simulateWork();
-        String s = localThreadValue.get();
-        System.out.println("Thread Id: " + Thread.currentThread().getName() + " - " + s);
+        try {
+            localThreadValue.set("userId - " + Thread.currentThread().getName());
+
+            System.out.println("Thread Id: " + Thread.currentThread().getName() + " - " + localThreadValue.get());
+            simulateWork();
+
+            String s = localThreadValue.get();
+            if (s != null)
+                System.out.println("Thread Id: " + Thread.currentThread().getName() + " - " + s);
+        } finally {
+            localThreadValue.remove();
+        }
     }
 
     private void simulateWork() {
         try {
             Thread.sleep(1000);
+            localThreadValue.set("userId - " + Thread.currentThread().getName() + " - " + localThreadValue.get());
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 3; i++) {
+            new Thread(new UserService(), "subthread-" + i).start();
+        }
+
+        String name = localThreadValue.get();
+        System.out.println("Main thread (should be null): " + name);
     }
 }

@@ -9,7 +9,7 @@ public class UserServiceTest {
         Thread[] threads = new Thread[10];
 
         for (int i = 0; i < threads.length; i++) {
-            UserService us = new UserService("userId-" + i);
+            UserService us = new UserService();
             threads[i] = new Thread(us);
         }
 

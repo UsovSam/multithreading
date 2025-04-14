@@ -26,11 +26,13 @@ public class ProdCons {
         public void generateNumber() {
             for (int i = 0; i < maxElements; i++) {
                 Integer value = ThreadLocalRandom.current().nextInt(100);
-                this.queue.add(value);
+                try {
+                    this.queue.put(value);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 log.info("Produced by:" + Thread.currentThread().getName() + " val:" + value);
             }
-//            log.info("Produced by:" + Thread.currentThread().getName() + " val:" + Integer.MAX_VALUE);
-//            this.queue.add(Integer.MAX_VALUE);
         }
     }
 
@@ -45,15 +47,8 @@ public class ProdCons {
         public void run() {
             while (true) {
                 if (!queue.isEmpty()) {
-                    try {
-                        Integer el = queue.take();
-                        log.info("Consumed by:" + Thread.currentThread().getName() + " val:" + el);
-//                        if(el == Integer.MAX_VALUE) {
-//                            break;
-//                        }
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    Integer el = queue.poll();
+                    log.info("Consumed by:" + Thread.currentThread().getName() + " val:" + el);
                 }
             }
         }
@@ -61,7 +56,7 @@ public class ProdCons {
 
     public static void main(String[] args) {
 
-        BlockingQueue<Integer> queue = new LinkedBlockingQueue<>();
+        BlockingQueue<Integer> queue = new LinkedBlockingQueue<>(10);
 
         for (int i = 0; i < 4; i++) {
             new Thread(new Producer(queue, 10)).start();
